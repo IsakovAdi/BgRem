@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">BgRem</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="take_picture">Take picture</string>
+    <string name="take_picture_description">Camera picture for sample app</string>
+    <string name="user_bg_text">Ваш фон</string>
+    <string name="color_bg_text">Цвет</string>
+    <string name="picture_bg_text">Картинка</string>
+    <string name="video_text">Видео</string>
+    <string name="photo_text">Фото</string>
+    <string name="downloadFileText">Загрузите файл</string>
+    <string name="sendingToServerText">Отправляем фото на сервер</string>
+
+</resources>
