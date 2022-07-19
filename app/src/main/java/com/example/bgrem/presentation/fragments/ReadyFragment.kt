@@ -7,15 +7,15 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.example.bgrem.R
 import com.example.bgrem.databinding.FragmentNotRemovedBinding
-import com.example.bgrem.presentation.fragments.loadingFragment.LoadingFragment
+import com.example.bgrem.databinding.FragmentReadyBinding
+import com.example.bgrem.presentation.fragments.selectBgFragment.SelectBgFragment
 
+class ReadyFragment : Fragment() {
 
-class NotRemovedFragment : Fragment() {
-
-    private val args by navArgs<NotRemovedFragmentArgs>()
-    private val binding: FragmentNotRemovedBinding by lazy {
-        FragmentNotRemovedBinding.inflate(layoutInflater)
+    private val binding: FragmentReadyBinding by lazy {
+        FragmentReadyBinding.inflate(layoutInflater)
     }
 
     override fun onCreateView(
@@ -25,13 +25,17 @@ class NotRemovedFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.updateJobBtn.setOnClickListener {
-            findNavController().navigate(
-                NotRemovedFragmentDirections.actionNotRemovedFragmentToLoadingFragment(
-                    args.imageUri,
-                    LoadingFragment.FROM_NOT_REMOVED_FRAGMENT
-                )
+
+    }
+
+
+    private fun launchSelectBgFragment() {
+        findNavController().navigate(
+            ReadyFragmentDirections.actionReadyFragmentToSelectBgFragment(
+                "",
+                "",
+                SelectBgFragment.FROM_READY_FRAGMENT
             )
-        }
+        )
     }
 }

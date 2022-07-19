@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.bgrem.databinding.FragmentNoConnetionBinding
+import com.example.bgrem.presentation.fragments.loadingFragment.LoadingFragment
 
 class NoConnectionFragment : Fragment() {
 

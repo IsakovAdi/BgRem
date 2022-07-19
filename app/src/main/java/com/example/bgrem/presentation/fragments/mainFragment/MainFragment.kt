@@ -10,30 +10,20 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.webkit.MimeTypeMap
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.bgrem.R
 import com.example.bgrem.databinding.BottomSheetDialogBinding
 import com.example.bgrem.databinding.FragmentMainBinding
-import com.example.bgrem.domain.models.JobResponse
-import com.example.bgrem.domain.models.TaskResponse
-import com.example.bgrem.presentation.UriPathHelper
-import com.example.bgrem.presentation.fragments.LoadingFragment
+import com.example.bgrem.presentation.fragments.loadingFragment.LoadingFragment
 import com.example.bgrem.presentation.isOnline
 import com.example.bgrem.presentation.makeView
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.MultipartBody
-import okhttp3.RequestBody
-import java.io.File
 
 class MainFragment : Fragment() {
     var cameraUri: Uri? = null

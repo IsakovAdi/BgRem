@@ -23,6 +23,7 @@ import com.example.bgrem.domain.models.BackgroundResponse
 import com.example.bgrem.domain.models.TaskStatus
 import com.example.bgrem.presentation.adapters.BgItemAdapter
 import com.example.bgrem.presentation.adapters.ChoiceAdapter
+import com.example.bgrem.presentation.fragments.loadingFragment.LoadingFragment
 import com.squareup.picasso.Picasso
 
 
@@ -38,6 +39,7 @@ class SelectBgFragment : Fragment(), ChoiceAdapter.ChoiceItemOnClickListener {
     private val choiceAdapter: ChoiceAdapter by lazy {
         ChoiceAdapter(actionListener = this)
     }
+    private var bgId: String = LoadingFragment.TRANSPARENT_BG_ID
 
     private val viewModel: SelectBgFragmentVM by viewModels()
 
@@ -59,9 +61,6 @@ class SelectBgFragment : Fragment(), ChoiceAdapter.ChoiceItemOnClickListener {
     }
 
     private fun observeViewModel() {
-//        viewModel.job.observe(viewLifecycleOwner) {
-//            Picasso.get().load(it.source_url).into(binding.mainImage)
-//        }
         viewModel.bgList.observe(viewLifecycleOwner) { allList ->
             allList.forEach { backgroundResponse ->
                 when (backgroundResponse.group) {
@@ -107,6 +106,7 @@ class SelectBgFragment : Fragment(), ChoiceAdapter.ChoiceItemOnClickListener {
                     .into(binding.bgImage)
                 BackgroundGroup.transparent.toString() -> binding.bgImage.setImageResource(0)
             }
+            bgId = it.id!!
         }
     }
 
@@ -115,6 +115,11 @@ class SelectBgFragment : Fragment(), ChoiceAdapter.ChoiceItemOnClickListener {
         val canvas = Canvas(bitmap)
         canvas.drawColor(Color.parseColor(color))
         binding.bgImage.setImageBitmap(bitmap)
+    }
+
+    companion object {
+        const val FROM_LOADING_FRAGMENT = "FROM_LOADING_FRAGMENT"
+        const val FROM_READY_FRAGMENT = "FROM_READY_FRAGMENT"
     }
 
 }

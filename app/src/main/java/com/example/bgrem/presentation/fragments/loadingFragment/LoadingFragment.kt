@@ -1,4 +1,4 @@
-package com.example.bgrem.presentation.fragments
+package com.example.bgrem.presentation.fragments.loadingFragment
 
 import android.net.Uri
 import android.os.Bundle
@@ -12,15 +12,15 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.bgrem.R
-import com.example.bgrem.domain.models.JobResponse
 import com.example.bgrem.domain.models.TaskStatus
 import com.example.bgrem.presentation.UriPathHelper
-import com.example.bgrem.presentation.fragments.mainFragment.LoadingFragmentViewModel
+import com.example.bgrem.presentation.fragments.selectBgFragment.SelectBgFragment
 import com.example.bgrem.presentation.isOnline
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import java.io.File
+
 
 class LoadingFragment : Fragment() {
 
@@ -73,7 +73,7 @@ class LoadingFragment : Fragment() {
 
     private fun launchNoConnectionFragment() {
         findNavController().navigate(
-            LoadingFragmentDirections.actionLoadingFragmentToNoConnectionFragment(
+           LoadingFragmentDirections.actionLoadingFragmentToNoConnectionFragment(
                 args.imageUri
             )
         )
@@ -83,7 +83,8 @@ class LoadingFragment : Fragment() {
         findNavController().navigate(
             LoadingFragmentDirections.actionLoadingFragmentToSelectBgFragment(
                 jobId,
-                task
+                task,
+                SelectBgFragment.FROM_LOADING_FRAGMENT
             )
         )
     }
@@ -114,6 +115,7 @@ class LoadingFragment : Fragment() {
         const val FROM_NO_CONNECT_FRAGMENT = "FROM_NO_CONNECT_FRAGMENT"
         const val FROM_MAIN_FRAGMENT = "FROM_MAIN_FRAGMENT"
         const val FROM_NOT_REMOVED_FRAGMENT = "FROM_TASK_RESPONSE"
+        const val FROM_SELECT_BG_FRAGMENT = "FROM_SELECT_BG_FRAGMENT"
         var taskId = String()
         var jobId = String()
     }

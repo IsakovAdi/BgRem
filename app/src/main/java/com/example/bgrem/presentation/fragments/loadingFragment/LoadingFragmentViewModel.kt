@@ -1,4 +1,4 @@
-package com.example.bgrem.presentation.fragments.mainFragment
+package com.example.bgrem.presentation.fragments.loadingFragment
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -7,11 +7,11 @@ import androidx.lifecycle.viewModelScope
 import com.example.bgrem.data.ItemBgRepositoryImpl
 import com.example.bgrem.domain.models.JobResponse
 import com.example.bgrem.domain.models.TaskResponse
-import com.example.bgrem.domain.models.TaskStatus
 import com.example.bgrem.domain.usecases.CreateJobUseCase
 import com.example.bgrem.domain.usecases.CreateTaskUseCase
 import com.example.bgrem.domain.usecases.GetJobUseCase
 import com.example.bgrem.domain.usecases.GetTaskUseCase
+import com.example.bgrem.presentation.DownloadTask
 import com.example.bgrem.presentation.Event
 import kotlinx.coroutines.launch
 import okhttp3.MultipartBody
@@ -70,6 +70,4 @@ class LoadingFragmentViewModel : ViewModel() {
             _errorJob.value = response.errorBody().toString()
         }
     }
-
-
 }
