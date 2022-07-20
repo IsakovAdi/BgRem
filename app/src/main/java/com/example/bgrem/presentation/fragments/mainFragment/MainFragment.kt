@@ -20,6 +20,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.bgrem.R
 import com.example.bgrem.databinding.BottomSheetDialogBinding
 import com.example.bgrem.databinding.FragmentMainBinding
+import com.example.bgrem.presentation.fragments.NoConnectionFragment
 import com.example.bgrem.presentation.fragments.loadingFragment.LoadingFragment
 import com.example.bgrem.presentation.isOnline
 import com.example.bgrem.presentation.makeView
@@ -69,7 +70,7 @@ class MainFragment : Fragment() {
     private fun launchLoadingFragment() {
         findNavController().navigate(
             MainFragmentDirections.actionMainFragmentToLoadingFragment(
-                imageUri!!, LoadingFragment.FROM_MAIN_FRAGMENT
+                imageUri!!, MAIN_FRAGMENT
             )
         )
     }
@@ -77,7 +78,7 @@ class MainFragment : Fragment() {
     private fun launchNotConnectionFragment() {
         findNavController().navigate(
             MainFragmentDirections.actionMainFragmentToNoConnectionFragment(
-                imageUri!!
+                "", "", imageUri!!, MAIN_FRAGMENT
             )
         )
     }
@@ -149,6 +150,7 @@ class MainFragment : Fragment() {
             Manifest.permission.CAMERA
         )
         val MIME_TYPES = arrayOf("image/jpeg", "image/png")
+        const val MAIN_FRAGMENT = "MAIN_FRAGMENT"
     }
 
 }

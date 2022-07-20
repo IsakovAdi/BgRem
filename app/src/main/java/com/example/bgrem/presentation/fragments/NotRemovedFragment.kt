@@ -29,9 +29,13 @@ class NotRemovedFragment : Fragment() {
             findNavController().navigate(
                 NotRemovedFragmentDirections.actionNotRemovedFragmentToLoadingFragment(
                     args.imageUri,
-                    LoadingFragment.FROM_NOT_REMOVED_FRAGMENT
+                    NOT_REMOVED_FRAGMENT
                 )
             )
         }
+    }
+
+    companion object{
+        const val NOT_REMOVED_FRAGMENT = "NOT_REMOVED_FRAGMENT"
     }
 }

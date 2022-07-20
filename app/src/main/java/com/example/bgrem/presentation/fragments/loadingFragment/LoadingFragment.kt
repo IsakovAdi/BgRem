@@ -1,11 +1,9 @@
 package com.example.bgrem.presentation.fragments.loadingFragment
 
-import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.webkit.MimeTypeMap
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -14,7 +12,10 @@ import androidx.navigation.fragment.navArgs
 import com.example.bgrem.R
 import com.example.bgrem.domain.models.TaskStatus
 import com.example.bgrem.presentation.UriPathHelper
+import com.example.bgrem.presentation.fragments.NoConnectionFragment
+import com.example.bgrem.presentation.fragments.NotRemovedFragment
 import com.example.bgrem.presentation.fragments.selectBgFragment.SelectBgFragment
+import com.example.bgrem.presentation.getImageType
 import com.example.bgrem.presentation.isOnline
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
@@ -34,9 +35,13 @@ class LoadingFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        checkDirections()
+        observeViewModel()
+    }
+
+    private fun checkDirections() {
         if (requireContext().isOnline()) uploadImage()
         else launchNoConnectionFragment()
-        observeViewModel()
     }
 
     private fun observeViewModel() {
@@ -44,8 +49,7 @@ class LoadingFragment : Fragment() {
             it.getValue()?.let {
                 if (it.is_portrait) {
                     jobId = it.id
-                    createTask(it.id, "image/${getImageType(args.imageUri).toString()}")
-//                    createTask(it.id, "image/jpeg")
+                    createTask(it.id)
                 } else {
                     launchNotRemovedFragment()
                     Toast.makeText(requireContext(), "Require portrait file", Toast.LENGTH_SHORT)
@@ -73,8 +77,8 @@ class LoadingFragment : Fragment() {
 
     private fun launchNoConnectionFragment() {
         findNavController().navigate(
-           LoadingFragmentDirections.actionLoadingFragmentToNoConnectionFragment(
-                args.imageUri
+            LoadingFragmentDirections.actionLoadingFragmentToNoConnectionFragment(
+                "", "", args.imageUri, LOADING_FRAGMENT
             )
         )
     }
@@ -84,7 +88,8 @@ class LoadingFragment : Fragment() {
             LoadingFragmentDirections.actionLoadingFragmentToSelectBgFragment(
                 jobId,
                 task,
-                SelectBgFragment.FROM_LOADING_FRAGMENT
+                LOADING_FRAGMENT,
+                args.imageUri
             )
         )
     }
@@ -99,24 +104,23 @@ class LoadingFragment : Fragment() {
         viewModel.createJob(multiPartBody)
     }
 
-    private fun createTask(job: String, type: String) {
-        if (args.direction == FROM_NOT_REMOVED_FRAGMENT) viewModel.getTask(taskId)
+    private fun createTask(job: String) {
+        val type = String().getImageType(requireContext(), args.imageUri)
+        if (args.direction == NotRemovedFragment.NOT_REMOVED_FRAGMENT) viewModel.getTask(taskId)
         else viewModel.createTask(job, type, TRANSPARENT_BG_ID)
     }
 
-    private fun getImageType(uri: Uri): String? {
-        val cr = requireContext().contentResolver
-        val mime = MimeTypeMap.getSingleton()
-        return mime.getExtensionFromMimeType(cr.getType(uri))
-    }
+//    private fun getImageType(uri: Uri): String {
+//        val cr = requireContext().contentResolver
+//        val mime = MimeTypeMap.getSingleton()
+//        fileType = "image/${mime.getExtensionFromMimeType(cr.getType(uri)).toString()}"
+//        return fileType
+//    }
 
     companion object {
         const val TRANSPARENT_BG_ID = "db9b524f-2204-433e-a89b-8946bbe01893"
-        const val FROM_NO_CONNECT_FRAGMENT = "FROM_NO_CONNECT_FRAGMENT"
-        const val FROM_MAIN_FRAGMENT = "FROM_MAIN_FRAGMENT"
-        const val FROM_NOT_REMOVED_FRAGMENT = "FROM_TASK_RESPONSE"
-        const val FROM_SELECT_BG_FRAGMENT = "FROM_SELECT_BG_FRAGMENT"
-        var taskId = String()
-        var jobId = String()
+        const val LOADING_FRAGMENT = "LOADING_FRAGMENT"
+        private var taskId = String()
+        private var jobId = String()
     }
 }

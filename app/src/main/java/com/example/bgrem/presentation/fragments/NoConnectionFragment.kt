@@ -1,10 +1,10 @@
 package com.example.bgrem.presentation.fragments
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.bgrem.databinding.FragmentNoConnetionBinding
@@ -27,11 +27,26 @@ class NoConnectionFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.updateJobBtn.setOnClickListener {
-            findNavController().navigate(
-                NoConnectionFragmentDirections.actionNoConnectionFragmentToLoadingFragment(
-                    args.imageUri, LoadingFragment.FROM_NO_CONNECT_FRAGMENT
+            if (args.direction == LoadingFragment.LOADING_FRAGMENT) {
+                findNavController().navigate(
+                    NoConnectionFragmentDirections.actionNoConnectionFragmentToLoadingFragment(
+                        args.imageUri, NO_CONNECTION_FRAGMENT
+                    )
                 )
-            )
+            } else if (args.direction == FinalLoadingFragment.FINAL_LOADING_FRAGMENT) {
+                findNavController().navigate(
+                    NoConnectionFragmentDirections.actionNoConnectionFragmentToFinalLoadingFragment(
+                        args.bgId,
+                        args.job,
+                        args.imageUri,
+                        NO_CONNECTION_FRAGMENT
+                    )
+                )
+            }
         }
+    }
+
+    companion object {
+        const val NO_CONNECTION_FRAGMENT = "NO_CONNECTION_FRAGMENT"
     }
 }

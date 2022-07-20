@@ -23,6 +23,7 @@ import com.example.bgrem.domain.models.BackgroundResponse
 import com.example.bgrem.domain.models.TaskStatus
 import com.example.bgrem.presentation.adapters.BgItemAdapter
 import com.example.bgrem.presentation.adapters.ChoiceAdapter
+import com.example.bgrem.presentation.fragments.ReadyFragment
 import com.example.bgrem.presentation.fragments.loadingFragment.LoadingFragment
 import com.squareup.picasso.Picasso
 
@@ -39,6 +40,7 @@ class SelectBgFragment : Fragment(), ChoiceAdapter.ChoiceItemOnClickListener {
     private val choiceAdapter: ChoiceAdapter by lazy {
         ChoiceAdapter(actionListener = this)
     }
+
     private var bgId: String = LoadingFragment.TRANSPARENT_BG_ID
 
     private val viewModel: SelectBgFragmentVM by viewModels()
@@ -54,10 +56,35 @@ class SelectBgFragment : Fragment(), ChoiceAdapter.ChoiceItemOnClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         setupRecyclers()
-        viewModel.getTask(args.task)
-        viewModel.getBgColors()
+        if (args.direction != ReadyFragment.READY_FRAGMENT) {
+            viewModel.getTask(args.task)
+            viewModel.getBgColors()
+        }
+        binding.nextBtn.setOnClickListener {
+            if (args.direction == ReadyFragment.READY_FRAGMENT) launchReadyFragment()
+            else launchFinalLoadingFragment()
+        }
         observeViewModel()
+    }
+
+    private fun launchReadyFragment() {
+        findNavController().navigate(
+            SelectBgFragmentDirections.actionSelectBgFragmentToReadyFragment3(
+                "",
+                args.imageUri,
+                SELECT_BG_FRAGMENT
+            )
+        )
+    }
+
+    private fun launchFinalLoadingFragment() {
+        findNavController().navigate(
+            SelectBgFragmentDirections.actionSelectBgFragmentToFinalLoadingFragment(
+                bgId, args.job, args.imageUri, SELECT_BG_FRAGMENT
+            )
+        )
     }
 
     private fun observeViewModel() {
@@ -73,6 +100,7 @@ class SelectBgFragment : Fragment(), ChoiceAdapter.ChoiceItemOnClickListener {
         }
         viewModel.task.observe(viewLifecycleOwner) {
             Picasso.get().load(it.download_url).into(binding.mainImage)
+            taskDownloadUrl = it.download_url
         }
         viewModel.error.observe(viewLifecycleOwner) {
             Toast.makeText(requireContext(), it.toString(), Toast.LENGTH_SHORT).show()
@@ -118,8 +146,8 @@ class SelectBgFragment : Fragment(), ChoiceAdapter.ChoiceItemOnClickListener {
     }
 
     companion object {
-        const val FROM_LOADING_FRAGMENT = "FROM_LOADING_FRAGMENT"
-        const val FROM_READY_FRAGMENT = "FROM_READY_FRAGMENT"
+        const val SELECT_BG_FRAGMENT = "SELECT_BG_FRAGMENT"
+        private var taskDownloadUrl = String()
     }
 
 }

@@ -3,11 +3,13 @@ package com.example.bgrem.presentation
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
+import android.net.Uri
 import android.os.Build
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.MimeTypeMap
 import androidx.annotation.RequiresApi
 
 @RequiresApi(Build.VERSION_CODES.M)
@@ -34,6 +36,13 @@ fun Context.isOnline(): Boolean {
     }
     return false
 }
+
 fun Int.makeView(parent: ViewGroup): View =
     LayoutInflater.from(parent.context).inflate(this, parent, false)
+
+fun String.getImageType(context: Context, uri: Uri): String {
+    val cr = context.contentResolver
+    val mime = MimeTypeMap.getSingleton()
+    return "image/${mime.getExtensionFromMimeType(cr.getType(uri)).toString()}"
+}
 

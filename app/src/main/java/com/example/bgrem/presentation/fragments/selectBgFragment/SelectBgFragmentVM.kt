@@ -9,6 +9,7 @@ import com.example.bgrem.domain.models.BackgroundResponse
 import com.example.bgrem.domain.models.JobResponse
 import com.example.bgrem.domain.models.TaskResponse
 import com.example.bgrem.domain.models.TaskStatus
+import com.example.bgrem.domain.usecases.CreateTaskUseCase
 import com.example.bgrem.domain.usecases.GetBgColorsUseCase
 import com.example.bgrem.domain.usecases.GetJobUseCase
 import com.example.bgrem.domain.usecases.GetTaskUseCase
@@ -32,13 +33,8 @@ class SelectBgFragmentVM : ViewModel() {
     private val _task: MutableLiveData<TaskResponse> = MutableLiveData()
     val task: LiveData<TaskResponse> get() = _task
 
-    fun getJob(job: String) = viewModelScope.launch {
-        val response = getJobUseCase.execute(job)
-        if (response.isSuccessful) _job.value = response.body()
-        else _error.value = response.errorBody().toString()
-    }
 
-    fun getTask(task:String) = viewModelScope.launch {
+    fun getTask(task: String) = viewModelScope.launch {
         val response = getTaskUseCase.execute(task)
         if (response.isSuccessful) _task.value = response.body()
         else _error.value = response.errorBody().toString()
