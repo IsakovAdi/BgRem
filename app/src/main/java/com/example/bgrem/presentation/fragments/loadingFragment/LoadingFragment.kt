@@ -58,11 +58,19 @@ class LoadingFragment : Fragment() {
             }
         }
         viewModel.task.observe(viewLifecycleOwner) {
-            if (it.status == TaskStatus.done.toString()) launchSelectBgFragment(it.id)
-            else if (!requireContext().isOnline()) launchNoConnectionFragment()
+            taskId = it.id
+            if (!requireContext().isOnline()) launchNoConnectionFragment()
             else {
+                if (it.status == TaskStatus.done.toString()) launchSelectBgFragment(it.id)
+                else viewModel.getTask(it.id)
+            }
+//            if (it.status == TaskStatus.done.toString()) launchSelectBgFragment(it.id)
+//            else if (!requireContext().isOnline()) launchNoConnectionFragment()
+        }
+
+        viewModel.taskError.observe(viewLifecycleOwner) {
+            if (it != null) {
                 launchNotRemovedFragment()
-                taskId = it.id
             }
         }
     }

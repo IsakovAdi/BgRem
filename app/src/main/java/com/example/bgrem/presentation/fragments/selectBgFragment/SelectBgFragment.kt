@@ -87,6 +87,7 @@ class SelectBgFragment : Fragment(), ChoiceAdapter.ChoiceItemOnClickListener {
         }
         viewModel.task.observe(viewLifecycleOwner) {
             Picasso.get().load(it.download_url).into(binding.mainImage)
+            binding.progressBar.visibility = View.GONE
             taskDownloadUrl = it.download_url
         }
         viewModel.error.observe(viewLifecycleOwner) {

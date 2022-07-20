@@ -45,6 +45,7 @@ class ReadyFragment : Fragment() {
             }
         }
 
+
         requireActivity().onBackPressedDispatcher.addCallback(
             viewLifecycleOwner,
             object : OnBackPressedCallback(true) {

@@ -27,13 +27,7 @@ class NoConnectionFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.updateJobBtn.setOnClickListener {
-            if (args.direction == LoadingFragment.LOADING_FRAGMENT) {
-                findNavController().navigate(
-                    NoConnectionFragmentDirections.actionNoConnectionFragmentToLoadingFragment(
-                        args.imageUri, NO_CONNECTION_FRAGMENT
-                    )
-                )
-            } else if (args.direction == FinalLoadingFragment.FINAL_LOADING_FRAGMENT) {
+            if (args.direction == FinalLoadingFragment.FINAL_LOADING_FRAGMENT) {
                 findNavController().navigate(
                     NoConnectionFragmentDirections.actionNoConnectionFragmentToFinalLoadingFragment(
                         args.bgId,
@@ -43,6 +37,29 @@ class NoConnectionFragment : Fragment() {
                     )
                 )
             }
+            else{
+                findNavController().navigate(
+                    NoConnectionFragmentDirections.actionNoConnectionFragmentToLoadingFragment(
+                        args.imageUri, NO_CONNECTION_FRAGMENT
+                    )
+                )
+            }
+//            if (args.direction == LoadingFragment.LOADING_FRAGMENT) {
+//                findNavController().navigate(
+//                    NoConnectionFragmentDirections.actionNoConnectionFragmentToLoadingFragment(
+//                        args.imageUri, NO_CONNECTION_FRAGMENT
+//                    )
+//                )
+//            } else if (args.direction == FinalLoadingFragment.FINAL_LOADING_FRAGMENT) {
+//                findNavController().navigate(
+//                    NoConnectionFragmentDirections.actionNoConnectionFragmentToFinalLoadingFragment(
+//                        args.bgId,
+//                        args.job,
+//                        args.imageUri,
+//                        NO_CONNECTION_FRAGMENT
+//                    )
+//                )
+//            }
         }
     }
 

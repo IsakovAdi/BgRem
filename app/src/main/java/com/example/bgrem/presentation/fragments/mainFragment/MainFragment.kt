@@ -86,7 +86,6 @@ class MainFragment : Fragment() {
     private fun launchNextFragment() {
         if (requireContext().isOnline()) launchLoadingFragment()
         else launchNotConnectionFragment()
-
     }
 
     @SuppressLint("IntentReset")
