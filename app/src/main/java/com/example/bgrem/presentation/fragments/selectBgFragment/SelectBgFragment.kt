@@ -58,25 +58,12 @@ class SelectBgFragment : Fragment(), ChoiceAdapter.ChoiceItemOnClickListener {
         super.onViewCreated(view, savedInstanceState)
 
         setupRecyclers()
-        if (args.direction != ReadyFragment.READY_FRAGMENT) {
-            viewModel.getTask(args.task)
-            viewModel.getBgColors()
-        }
+        viewModel.getTask(args.task)
+        viewModel.getBgColors()
         binding.nextBtn.setOnClickListener {
-            if (args.direction == ReadyFragment.READY_FRAGMENT) launchReadyFragment()
-            else launchFinalLoadingFragment()
+            launchFinalLoadingFragment()
         }
         observeViewModel()
-    }
-
-    private fun launchReadyFragment() {
-        findNavController().navigate(
-            SelectBgFragmentDirections.actionSelectBgFragmentToReadyFragment3(
-                "",
-                args.imageUri,
-                SELECT_BG_FRAGMENT
-            )
-        )
     }
 
     private fun launchFinalLoadingFragment() {

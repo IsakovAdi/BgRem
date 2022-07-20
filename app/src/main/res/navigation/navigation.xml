@@ -43,11 +43,6 @@
             app:destination="@id/finalLoadingFragment"
             app:popUpTo="@id/selectBgFragment"
             app:popUpToInclusive="true" />
-        <action
-            android:id="@+id/action_selectBgFragment_to_readyFragment3"
-            app:destination="@id/readyFragment"
-            app:popUpTo="@id/selectBgFragment"
-            app:popUpToInclusive="true" />
 
     </fragment>
     <fragment
@@ -74,7 +69,10 @@
             app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_noConnectionFragment_to_finalLoadingFragment"
-            app:destination="@id/finalLoadingFragment" />
+            app:destination="@id/finalLoadingFragment"
+            app:popUpTo="@id/noConnectionFragment"
+            app:popUpToInclusive="true"
+            />
     </fragment>
     <fragment
         android:id="@+id/loadingFragment"
@@ -134,12 +132,12 @@
         <argument
             android:name="direction"
             app:argType="string" />
-
         <action
-            android:id="@+id/action_readyFragment_to_selectBgFragment"
-            app:destination="@id/selectBgFragment"
-            app:popUpTo="@id/readyFragment"
-            app:popUpToInclusive="true" />
+            android:id="@+id/action_readyFragment_to_mainFragment2"
+            app:destination="@id/mainFragment"
+            app:popUpTo="@id/mainFragment"
+            app:popUpToInclusive="true"/>
+
     </fragment>
     <fragment
         android:id="@+id/finalLoadingFragment"
@@ -165,6 +163,8 @@
             app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_finalLoadingFragment_to_noConnectionFragment"
-            app:destination="@id/noConnectionFragment" />
+            app:destination="@id/noConnectionFragment"
+            app:popUpTo="@id/finalLoadingFragment"
+            app:popUpToInclusive="true"/>
     </fragment>
 </navigation>

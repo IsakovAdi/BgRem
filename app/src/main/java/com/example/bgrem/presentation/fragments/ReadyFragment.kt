@@ -1,34 +1,24 @@
 package com.example.bgrem.presentation.fragments
 
-import android.annotation.SuppressLint
-import android.app.DownloadManager
-import android.content.Context
-import android.database.Cursor
-import android.net.Uri
 import android.os.Bundle
-import android.os.Environment
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.bgrem.R
-import com.example.bgrem.databinding.FragmentNotRemovedBinding
 import com.example.bgrem.databinding.FragmentReadyBinding
+import com.example.bgrem.domain.models.TaskStatus
 import com.example.bgrem.presentation.DownloadTask
-import com.example.bgrem.presentation.fragments.selectBgFragment.SelectBgFragment
-import com.example.bgrem.presentation.fragments.selectBgFragment.SelectBgFragmentArgs
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.squareup.picasso.Picasso
-import java.io.File
 
 class ReadyFragment : Fragment() {
     private val args by navArgs<ReadyFragmentArgs>()
-    private var directory: File? = null
-
+    private var isDownload = false
     private val binding: FragmentReadyBinding by lazy {
         FragmentReadyBinding.inflate(layoutInflater)
     }
@@ -47,13 +37,30 @@ class ReadyFragment : Fragment() {
         binding.bottomNavView.setOnNavigationItemSelectedListener {
             when (it.itemId) {
                 R.id.save -> {
-                    Log.d("downloadUrl", downloadUrl)
+                    isDownload = true
                     DownloadTask.downloadImage(requireContext(), downloadUrl)
                     true
                 }
                 else -> false
             }
         }
+
+        requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    if (!isDownload) {
+                        Toast.makeText(
+                            requireContext(),
+                            "Вы не сохранили фото",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                    findNavController().navigate(
+                        ReadyFragmentDirections.actionReadyFragmentToMainFragment2()
+                    )
+                }
+            })
     }
 
 

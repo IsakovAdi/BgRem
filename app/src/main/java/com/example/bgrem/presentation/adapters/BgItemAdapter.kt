@@ -84,6 +84,7 @@ class BgItemAdapter : RecyclerView.Adapter<GenericViewHolder>() {
         const val USER_BG_ITEM_TYPE = 3
         const val IMAGE_ITEM_TYPE = 4
     }
+
 }
 
 
