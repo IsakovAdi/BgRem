@@ -7,6 +7,7 @@ import android.database.Cursor
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -46,6 +47,7 @@ class ReadyFragment : Fragment() {
         binding.bottomNavView.setOnNavigationItemSelectedListener {
             when (it.itemId) {
                 R.id.save -> {
+                    Log.d("downloadUrl", downloadUrl)
                     DownloadTask.downloadImage(downloadUrl, requireContext())
                     true
                 }
@@ -53,76 +55,6 @@ class ReadyFragment : Fragment() {
             }
         }
     }
-
-//    fun downloadImage() {
-//        directory = File(Environment.DIRECTORY_PICTURES)
-//        if (directory?.exists()!!) {
-//            directory?.mkdirs()
-//        }
-//        createDownloadManager()
-//    }
-//
-//    private fun createDownloadManager() {
-//        val downloadManager =
-//            requireContext().getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
-//        val downloadUri = Uri.parse(args.downloadUrl)
-//        val request = DownloadManager.Request(downloadUri).apply {
-//            setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI or DownloadManager.Request.NETWORK_MOBILE)
-//                .setAllowedOverRoaming(false)
-//                .setTitle(args.downloadUrl.substring(args.downloadUrl.lastIndexOf("/") + 1))
-//                .setDescription("")
-//                .setDestinationInExternalPublicDir(
-//                    directory.toString(),
-//                    args.downloadUrl.substring(args.downloadUrl.lastIndexOf("/") + 1)
-//                )
-//        }
-//        startDownload(downloadManager, request)
-//    }
-//
-//
-//    @SuppressLint("Range")
-//    private fun startDownload(
-//        downloadManager: DownloadManager,
-//        request: DownloadManager.Request
-//    ) {
-//        val downloadId = downloadManager.enqueue(request)
-//        val query = DownloadManager.Query().setFilterById(downloadId)
-//        Thread(Runnable {
-//            var downloading = true
-//            while (downloading) {
-//                val cursor: Cursor = downloadManager.query(query)
-//                cursor.moveToFirst()
-//                if (cursor.getInt(
-//                        cursor.getColumnIndex(
-//                            DownloadManager.COLUMN_STATUS
-//                        )
-//                    ) == DownloadManager.STATUS_SUCCESSFUL
-//                ) {
-//                    downloading = false
-//                }
-//                val status = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS))
-//                statusMessage(status)
-//                cursor.close()
-//            }
-//        }).start()
-//    }
-//
-//    private fun statusMessage(status: Int) {
-//        if (status == DownloadManager.STATUS_SUCCESSFUL) {
-//            var msg =
-//                "Image downloaded successfully in ${directory}" + File.separator + args.downloadUrl.substring(
-//                    args.downloadUrl.lastIndexOf("/") + 1
-//                )
-//            Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show()
-//
-//        } else if (status == DownloadManager.STATUS_FAILED) {
-//            Toast.makeText(
-//                requireContext(),
-//                "Download has been failed, please try again",
-//                Toast.LENGTH_SHORT
-//            ).show()
-//        }
-//    }
 
     companion object {
         const val READY_FRAGMENT = "READY_FRAGMENT"

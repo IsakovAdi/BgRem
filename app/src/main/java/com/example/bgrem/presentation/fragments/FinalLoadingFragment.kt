@@ -36,12 +36,10 @@ class FinalLoadingFragment : Fragment() {
     private fun observeViewModel() {
         viewModel.task.observe(viewLifecycleOwner) {
             downloadUrl = it.download_url
-            while (true) {
-                if (it.status == TaskStatus.done.toString()) {
-                    launchReadyFragment(it.download_url)
-                } else {
-                    viewModel.getTask(it.id)
-                }
+            if (it.status == TaskStatus.done.toString()) {
+                launchReadyFragment(it.download_url)
+            } else {
+                viewModel.getTask(it.id)
             }
         }
     }
