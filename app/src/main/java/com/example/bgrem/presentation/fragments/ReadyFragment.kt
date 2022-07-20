@@ -48,13 +48,14 @@ class ReadyFragment : Fragment() {
             when (it.itemId) {
                 R.id.save -> {
                     Log.d("downloadUrl", downloadUrl)
-                    DownloadTask.downloadImage(downloadUrl, requireContext())
+                    DownloadTask.downloadImage(requireContext(), downloadUrl)
                     true
                 }
                 else -> false
             }
         }
     }
+
 
     companion object {
         const val READY_FRAGMENT = "READY_FRAGMENT"

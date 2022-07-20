@@ -1,86 +1,87 @@
 package com.example.bgrem.presentation
 
-import android.annotation.SuppressLint
-import android.app.DownloadManager
+import android.content.ContentValues
 import android.content.Context
-import android.database.Cursor
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
+import android.os.Build
 import android.os.Environment
+import android.os.Handler
+import android.os.Looper
+import android.provider.MediaStore
 import android.widget.Toast
-import java.io.File
+import okio.IOException
+import java.io.*
+import java.net.HttpURLConnection
+import java.net.MalformedURLException
+import java.net.URL
+import java.util.concurrent.Executors
 
 object DownloadTask {
-    private var fileUrl = String()
-    private lateinit var directory: File
 
-    fun downloadImage(url: String, context: Context) {
-        fileUrl = url
-        directory = File(Environment.DIRECTORY_PICTURES)
-        if (!directory.exists()) {
-            directory.mkdirs()
-        }
-        createDownloadManager(context)
-    }
-
-    private fun createDownloadManager(context: Context) {
-        val downloadManager = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
-        val downloadUri = Uri.parse(fileUrl)
-        val request = DownloadManager.Request(downloadUri).apply {
-            setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI or DownloadManager.Request.NETWORK_MOBILE)
-                .setAllowedOverRoaming(false)
-                .setTitle(fileUrl.substring(fileUrl.lastIndexOf("/") + 1))
-                .setDescription("")
-                .setDestinationInExternalPublicDir(
-                    directory.toString(),
-                    fileUrl.substring(fileUrl.lastIndexOf("/") + 1)
-                )
-        }
-        startDownload(context, downloadManager, request)
-    }
-
-    @SuppressLint("Range")
-    private fun startDownload(
-        context: Context,
-        downloadManager: DownloadManager,
-        request: DownloadManager.Request
-    ) {
-        val downloadId = downloadManager.enqueue(request)
-        val query = DownloadManager.Query().setFilterById(downloadId)
-        Thread(Runnable {
-            var downloading = true
-            while (downloading) {
-                val cursor: Cursor = downloadManager.query(query)
-                cursor.moveToFirst()
-                if (cursor.getInt(
-                        cursor.getColumnIndex(
-                            DownloadManager.COLUMN_STATUS
-                        )
-                    ) == DownloadManager.STATUS_SUCCESSFUL
-                ) {
-                    downloading = false
+    fun downloadImage(context: Context, downloadUrl: String) {
+        var mImage: Bitmap?
+        val myExecutor = Executors.newSingleThreadExecutor()
+        val myHandler = Handler(Looper.getMainLooper())
+        myExecutor.execute {
+            mImage = mLoad(context, downloadUrl)
+            myHandler.post {
+                if (mImage != null) {
+                    mSaveMediaToStorage(context, mImage)
                 }
-                val status = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS))
-                statusMessage(context, status)
-                cursor.close()
             }
-        }).start()
-    }
-
-    private fun statusMessage(context: Context,status: Int) {
-        if (status == DownloadManager.STATUS_SUCCESSFUL) {
-            var msg =
-                "Image downloaded successfully in $directory" + File.separator + fileUrl.substring(
-                    fileUrl.lastIndexOf("/") + 1
-                )
-            Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
-
-        } else if (status == DownloadManager.STATUS_FAILED) {
-            Toast.makeText(
-                context,
-                "Download has been failed, please try again",
-                Toast.LENGTH_SHORT
-            ).show()
         }
     }
 
+    private fun mLoad(context: Context, string: String): Bitmap? {
+        val url: URL = mStringToURL(string)!!
+        val connection: HttpURLConnection?
+        try {
+            connection = url.openConnection() as HttpURLConnection
+            connection.connect()
+            val inputStream: InputStream = connection.inputStream
+            val bufferedInputStream = BufferedInputStream(inputStream)
+            return BitmapFactory.decodeStream(bufferedInputStream)
+        } catch (e: IOException) {
+            e.printStackTrace()
+            Toast.makeText(context, "Error", Toast.LENGTH_LONG).show()
+        }
+        return null
+    }
+
+    private fun mStringToURL(string: String): URL? {
+        try {
+            return URL(string)
+        } catch (e: MalformedURLException) {
+            e.printStackTrace()
+        }
+        return null
+    }
+
+    private fun mSaveMediaToStorage(context: Context, bitmap: Bitmap?) {
+        val filename = "${System.currentTimeMillis()}.jpg"
+        var fos: OutputStream? = null
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            context.contentResolver?.also { resolver ->
+                val contentValues = ContentValues().apply {
+                    put(MediaStore.MediaColumns.DISPLAY_NAME, filename)
+                    put(MediaStore.MediaColumns.MIME_TYPE, "image/jpg")
+                    put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_PICTURES)
+                }
+                val imageUri: Uri? =
+                    resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
+                fos = imageUri?.let { resolver.openOutputStream(it) }
+            }
+        } else {
+            val imagesDir =
+                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+            val image = File(imagesDir, filename)
+            fos = FileOutputStream(image)
+        }
+        fos?.use {
+            bitmap?.compress(Bitmap.CompressFormat.JPEG, 100, it)
+            Toast.makeText(context, "Saved to Gallery", Toast.LENGTH_SHORT).show()
+        }
+    }
 }
